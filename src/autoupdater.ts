@@ -236,7 +236,8 @@ export class AutoUpdater {
         ghCore.error(
           `Caught error running merge, skipping and continuing with remaining PRs`,
         );
-        ghCore.setFailed(e);
+        // This fails the action and skips any future action including auto-merged checks
+        // ghCore.setFailed(e);
       }
       return false;
     }
@@ -426,7 +427,7 @@ export class AutoUpdater {
       const mergeResp: octokit.OctokitResponse<any> =
         await this.octokit.rest.repos.merge(mergeOpts);
 
-      // See https://developer.github.com/v3/repos/merging/#perform-a-merge
+      // https://docs.github.com/en/rest/branches/branches#merge-a-branch
       const { status } = mergeResp;
       if (status === 200 || status === 201) {
         ghCore.info(
